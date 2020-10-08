@@ -30,7 +30,7 @@ app = Flask(__name__)
 # Load our model into memory.
 # Please update this path to reflect your own trained model.
 static_model = load_model(
-    path_to_model='C:\Users\hp\OneDrive - University of Johannesburg\Work\EDSA - Data Science\Supervised Learning\Predict\Github\regression-predict-api-template\assets\trained-models/model.pkl')
+    path_to_model='./assets/trained-models/submission_1_model.pkl')
 
 print ('-'*40)
 print ('Model succesfully loaded')
