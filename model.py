@@ -59,8 +59,83 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    predict_vector = feature_vector_df[['Pickup Lat','Pickup Long',
-                                        'Destination Lat','Destination Long']]
+    # Load the data
+    riders = pd.read_csv("./regression data/Riders.csv")
+    test = pd.read_csv("./regression data/Test.csv")
+    train = pd.read_csv("./regression data/Train.csv")
+    variableDefinitions= pd.read_csv("./regression data/VariableDefinitions.csv")
+    
+    # Checking missing values
+    train.isnull().sum()
+    
+    # Filling the missing values in values Temperature column with the on both the train and test data
+    train['Temperature'] = train['Temperature'].fillna( train['Temperature'].mean())
+    test['Temperature'] = test['Temperature'].fillna( test['Temperature'].mean())
+    
+    # Proportion of missing values in the Precipitation in millimeters column
+    missing_vals = train['Precipitation in millimeters'].isnull().sum()
+    round((missing_vals/len(train.index))*100,0)
+    
+    precipitation = train['Precipitation in millimeters'].copy()
+    precipitation.dropna(inplace = True)
+
+    # We want to check if whether the available records we have contain Zeros for when 
+    # there was no rainfall/precipitation at the time of the delivery.
+    precipitation[precipitation==0].count()
+    
+    # Fillinh missing values in Precipitation column with 0 on both train and test data
+    train['Precipitation in millimeters'] = train['Precipitation in millimeters'].fillna(0)
+    test['Precipitation in millimeters'] = test['Precipitation in millimeters'].fillna(0)
+    
+    # Checking if all missing values have been handled
+    train.isnull().sum()
+    
+    train = train[['Order No', 'User Id', 'Vehicle Type', 'Platform Type',
+       'Personal or Business', 'Placement - Day of Month',
+       'Placement - Weekday (Mo = 1)', 'Placement - Time',
+       'Confirmation - Day of Month', 'Confirmation - Weekday (Mo = 1)',
+       'Confirmation - Time', 'Arrival at Pickup - Day of Month',
+       'Arrival at Pickup - Weekday (Mo = 1)', 'Arrival at Pickup - Time',
+       'Pickup - Day of Month', 'Pickup - Weekday (Mo = 1)', 'Pickup - Time',
+       'Distance (KM)', 'Temperature', 'Precipitation in millimeters',
+       'Pickup Lat', 'Pickup Long', 'Destination Lat', 'Destination Long',
+       'Rider Id','Time from Pickup to Arrival']]
+    
+    # Build a dictionary of correlation coefficients and p-values
+    dict_cp = {}
+
+    column_titles = [col for col in corrs.index if col!= 'Time from Pickup to Arrival']
+    for col in column_titles:
+        p_val = round(pearsonr(train[col], train['Time from Pickup to Arrival'])[1],6)
+        dict_cp[col] = {'Correlation_Coefficient':corrs[col],
+                        'P_Value':p_val}
+
+    df_cp = pd.DataFrame(dict_cp).T
+    df_cp_sorted = df_cp.sort_values('P_Value')
+    df_cp_sorted[df_cp_sorted['P_Value']<0.1]
+    
+    #dropping highly correlated predictors and the ones that were not selected above
+    train = train.drop(['Placement - Weekday (Mo = 1)', 'Placement - Weekday (Mo = 1)','Confirmation - Day of Month',
+                        'Confirmation - Weekday (Mo = 1)','Arrival at Pickup - Day of Month','Arrival at Pickup - Weekday (Mo = 1)',
+                        'Pickup - Day of Month','Pickup - Weekday (Mo = 1)'], axis = 1)
+
+    test = test.drop(['Placement - Weekday (Mo = 1)', 'Placement - Weekday (Mo = 1)','Confirmation - Day of Month',
+                      'Confirmation - Weekday (Mo = 1)','Arrival at Pickup - Day of Month','Arrival at Pickup - Weekday (Mo = 1)',
+                      'Pickup - Day of Month','Pickup - Weekday (Mo = 1)'], axis = 1)
+
+    #dropping the irrelevant columns 
+    train = train.drop(['User Id','Vehicle Type','Rider Id', 'Confirmation - Time', ], axis = 1)
+
+    test = test.drop(['User Id','Vehicle Type','Rider Id', 'Confirmation - Time'], axis = 1)
+    
+    train.drop(['Placement - Time','Arrival at Pickup - Time','Pickup - Time'], axis = 1, inplace = True)
+    test.drop(['Placement - Time','Arrival at Pickup - Time','Pickup - Time'], axis = 1, inplace = True)
+    
+    test_df = pd.get_dummies(test.iloc[:,1:], drop_first= True)
+    train_df = pd.get_dummies(train.iloc[:,1:], drop_first=True)
+
+    
+    predict_vector = train_df
     # ------------------------------------------------------------------------
 
     return predict_vector
