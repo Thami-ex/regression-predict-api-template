@@ -30,8 +30,12 @@ app = Flask(__name__)
 # Load our model into memory.
 # Please update this path to reflect your own trained model.
 static_model = load_model(
+<<<<<<< HEAD
     path_to_model = './assets/trained-models/XGBoostModel.pkl')
     
+=======
+    path_to_model='.assets/trained-models/XGBoostModel.pkl')
+>>>>>>> parent of 5acfe64... ran our model on xgboost 1.2.1 version
 
 print ('-'*40)
 print ('Model succesfully loaded')
