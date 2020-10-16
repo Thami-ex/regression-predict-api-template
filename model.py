@@ -67,9 +67,8 @@ def _preprocess_data(data):
        'Arrival at Pickup - Weekday (Mo = 1)', 'Arrival at Pickup - Time',
        'Pickup - Day of Month', 'Pickup - Weekday (Mo = 1)', 'Pickup - Time',
        'Distance (KM)', 'Temperature', 'Pickup Lat', 'Pickup Long',
-       'Destination Lat', 'Destination Long', 'No_Of_Orders', 'Age',
-       'Average_Rating', 'No_of_Ratings', 'Personal or Business']]
-
+       'Destination Lat', 'Destination Long', 'Personal or Business']]
+    
 
     feature_vector_df["Temperature"] = feature_vector_df["Temperature"].fillna(feature_vector_df["Temperature"].mean())
 
@@ -83,7 +82,7 @@ def _preprocess_data(data):
     feature_vector_df["Arrival at Pickup - Time"] = pd.to_datetime(feature_vector_df["Arrival at Pickup - Time"])
 
 
-    # converting time features to int
+    # converting t=time features to int
     feature_vector_df["Placement - Time"] = feature_vector_df["Placement - Time"].astype('int64')
     feature_vector_df["Confirmation - Time"] = feature_vector_df["Confirmation - Time"].astype('int64')
     feature_vector_df["Pickup - Time"] = feature_vector_df["Pickup - Time"].astype('int64')
@@ -94,15 +93,16 @@ def _preprocess_data(data):
     feature_vector_df = pd.get_dummies(feature_vector_df, columns=["Personal or Business"], drop_first= True)
 
 
-    predict_vector = feature_vector_df[['Platform Type', 'Placement - Day of Month',
+    predict_vector = feature_vector_df[['Platform Type', 
+                                       'Placement - Day of Month',
        'Placement - Weekday (Mo = 1)', 'Placement - Time',
        'Confirmation - Day of Month', 'Confirmation - Weekday (Mo = 1)',
        'Confirmation - Time', 'Arrival at Pickup - Day of Month',
        'Arrival at Pickup - Weekday (Mo = 1)', 'Arrival at Pickup - Time',
        'Pickup - Day of Month', 'Pickup - Weekday (Mo = 1)', 'Pickup - Time',
        'Distance (KM)', 'Temperature', 'Pickup Lat', 'Pickup Long',
-       'Destination Lat', 'Destination Long', 'No_Of_Orders', 'Age',
-       'Average_Rating', 'No_of_Ratings', 'Personal or Business_Personal']]
+       'Destination Lat', 'Destination Long', 'Personal or Business_Personal']]
+
 
     # ------------------------------------------------------------------------
 
