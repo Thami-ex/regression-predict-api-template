@@ -30,7 +30,8 @@ app = Flask(__name__)
 # Load our model into memory.
 # Please update this path to reflect your own trained model.
 static_model = load_model(
-    path_to_model = './assets/trained_model/XGBoostModel.pkl')
+    path_to_model = './assets/trained_model/Linear_model.pkl')
+    
     
 
 print ('-'*40)
