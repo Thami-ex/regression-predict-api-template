@@ -59,7 +59,7 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    feature_vector_df = data[['Platform Type', 
+    feature_vector_df = feature_vector_df[['Platform Type', 
                                        'Placement - Day of Month',
        'Placement - Weekday (Mo = 1)', 'Placement - Time',
        'Confirmation - Day of Month', 'Confirmation - Weekday (Mo = 1)',
