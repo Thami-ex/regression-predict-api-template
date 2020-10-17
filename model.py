@@ -69,7 +69,7 @@ def _preprocess_data(data):
 
     # handling missing values
     new_train['Temperature'].fillna(round(new_train['Temperature'].mean(),1), inplace = True)
-    train['Precipitation in millimeters'].fillna(0, inplace = True)
+    new_train['Precipitation in millimeters'].fillna(0, inplace = True)
 
     # Converting time variables to datetime
     new_train["Placement - Time"] = pd.to_datetime(new_train["Placement - Time"])
