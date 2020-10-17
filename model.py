@@ -60,7 +60,7 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
 
-    new_train = feature_vector_df[['Platform Type', 'Placement - Day of Month', 'Distance (KM)',
+     new_train = feature_vector_df[['Platform Type', 'Placement - Day of Month', 'Distance (KM)',
        'Temperature', 'Precipitation in millimeters', 'Pickup Lat',
        'Pickup Long', 'Destination Lat', 'Destination Long',
        'Personal or Business']]
