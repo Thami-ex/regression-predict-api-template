@@ -59,9 +59,36 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    predict_vector = feature_vector_df[['Pickup Lat','Pickup Long',
-                                        'Destination Lat','Destination Long']]
+    
+    
+    
+    new_train = feature_vector_df[['Platform Type',
+       'Personal or Business', 'Placement - Time',
+       'Pickup - Day of Month', 'Pickup - Weekday (Mo = 1)', 'Pickup - Time',
+       'Distance (KM)', 'Temperature', 'Precipitation in millimeters']]
 
+    # handling missing values
+    new_train['Temperature'].fillna(round(new_train['Temperature'].mean(),1), inplace = True)
+    train['Precipitation in millimeters'].fillna(0, inplace = True)
+
+    # Converting time variables to datetime
+    new_train["Placement - Time"] = pd.to_datetime(new_train["Placement - Time"])
+    new_train["Pickup - Time"] = pd.to_datetime(new_train["Pickup - Time"])
+
+    # Convert pickup time and placement time to seconds
+    diff = new_train["Pickup - Time"]-new_train["Placement - Time"]
+
+    # created a new column for seconds from placement to pick up
+    new_train['Seconds from Placement to Pickup']= diff.dt.total_seconds()
+
+    # dropping the placement time and pick up time, this data is preserved in the seconds from placement to pickup column
+    new_train.drop(['Placement - Time','Pickup - Time'],axis = 1 ,inplace = True)
+
+    # encoding the personal or business column
+    new_train = pd.get_dummies(new_train, columns = ['Personal or Business'], drop_first= True)
+    
+    
+    predict_vector = new_train
     # ------------------------------------------------------------------------
 
 
