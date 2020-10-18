@@ -60,18 +60,30 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
 
-     new_train = feature_vector_df[['Platform Type', 'Placement - Day of Month', 'Distance (KM)',
-       'Temperature', 'Precipitation in millimeters', 'Pickup Lat',
-       'Pickup Long', 'Destination Lat', 'Destination Long',
-       'Personal or Business']]
+#*******************************************#
+    train_clean = feature_vector_df[['Platform Type', 'Placement - Day of Month',
+        'Placement - Weekday (Mo = 1)', 'Placement - Time',
+        'Confirmation - Day of Month', 'Confirmation - Weekday (Mo = 1)',
+        'Confirmation - Time', 'Arrival at Pickup - Day of Month',
+        'Arrival at Pickup - Weekday (Mo = 1)', 'Arrival at Pickup - Time',
+        'Pickup - Day of Month', 'Pickup - Weekday (Mo = 1)', 'Pickup - Time',
+        'Distance (KM)', 'Temperature', 'Pickup Lat', 'Pickup Long',
+        'Destination Lat', 'Destination Long']]
+    train_clean["Temperature"] = train_clean["Temperature"].fillna(train_clean["Temperature"].mean())
+    # Convert time from object to datetime datatype
+    #Train
+    train_clean["Placement - Time"] = pd.to_datetime(train_clean["Placement - Time"])
+    train_clean["Confirmation - Time"] = pd.to_datetime(train_clean["Confirmation - Time"])
+    train_clean["Pickup - Time"] = pd.to_datetime(train_clean["Pickup - Time"])
+    train_clean["Arrival at Pickup - Time"] = pd.to_datetime(train_clean["Arrival at Pickup - Time"])
+    # Convert time from datetime to int64 datatype
+    #Train
+    train_clean["Placement - Time"] = train_clean["Placement - Time"].astype('int64')
+    train_clean["Confirmation - Time"] = train_clean["Confirmation - Time"].astype('int64')
+    train_clean["Pickup - Time"] = train_clean["Pickup - Time"].astype('int64')
+    train_clean["Arrival at Pickup - Time"] = train_clean["Arrival at Pickup - Time"].astype('int64')
 
-    # handling missing values
-    new_train['Temperature'].fillna(round(new_train['Temperature'].mean(),1), inplace = True)
-    new_train['Precipitation in millimeters'].fillna(0, inplace = True)
-    # encoding the personal or business column
-    new_train = pd.get_dummies(new_train, columns = ['Personal or Business'], drop_first= True)
-    
-    predict_vector = new_train
+    predict_vector = train_clean
     # ------------------------------------------------------------------------
 
 
